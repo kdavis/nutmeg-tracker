@@ -32,8 +32,6 @@ class Nutmeg():
             "commit": "Sign in"
         }, allow_redirects=False)
 
-        self.login_query = login_attempt
-
         if "location" not in login_attempt.headers or login_attempt.headers['location'] != self.LOGIN_REDIRECT:
             self.LOGIN_SUCCESS = True
 
