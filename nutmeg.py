@@ -32,7 +32,7 @@ class Nutmeg():
             "commit": "Sign in"
         }, allow_redirects=False)
 
-        if "location" not in login_attempt.headers or login_attempt.headers['location'] != self.LOGIN_REDIRECT:
+        if "location" in login_attempt.headers and login_attempt.headers['location'] == self.LOGIN_REDIRECT:
             self.LOGIN_SUCCESS = True
 
         return self.LOGIN_SUCCESS
@@ -41,12 +41,9 @@ class Nutmeg():
         portfolio_data = self.session.get(self.NUTMEG_PORTFOLIO)
 
         matches = re.findall(
-            'data-uuid="([0-9a-f\-]+)" data-fund-type="([A-Za-z]+)"', portfolio_data.text, re.M)
+            'data-uuid="([0-9a-f\-]+)" data-fund-type="([A-Za-z]+)".*?&pound;([0-9]+)', portfolio_data.text, re.M | re.DOTALL)
 
-        if matches:
-            self.MATCHES = matches
-
-        return None
+        return matches
 
     def is_logged_in(self):
         return self.LOGIN_SUCCESS
